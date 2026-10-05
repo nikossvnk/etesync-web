@@ -1,9 +1,6 @@
 // SPDX-FileCopyrightText: © 2017 EteSync Authors
 // SPDX-License-Identifier: MPL-2.0
 
-// Disable some style eslint rules for things we can't control
-/* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/class-name-casing */
-
 declare module "ical.js" {
   function parse(input: string): any[];
 
@@ -42,14 +39,15 @@ declare module "ical.js" {
     public uid: string;
     public summary: string;
     public startDate: Time;
-    public endDate: Time;
+    get endDate(): Time;
+    set endDate(value: Time);
     public description: string;
     public location: string;
     public attendees: Property[];
 
     public component: Component;
 
-    public constructor(component?: Component | null, options?: {strictExceptions: boolean, exepctions: Array<Component | Event>});
+    public constructor(component?: Component | null, options?: { strictExceptions: boolean, exepctions: Array<Component | Event> });
 
     public isRecurring(): boolean;
     public iterator(startTime?: Time): RecurExpansion;

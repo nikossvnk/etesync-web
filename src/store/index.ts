@@ -21,7 +21,7 @@ const middleware = [
   promiseMiddleware,
 ];
 
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
   middleware.push(createLogger());
 }
 

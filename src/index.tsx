@@ -6,7 +6,7 @@ import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
 import App from "./App";
-import registerServiceWorker from "./registerServiceWorker";
+import unregisterServiceWorker from "./unregisterServiceWorker";
 import "./index.css";
 
 import * as Etebase from "etebase";
@@ -42,4 +42,4 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root") as HTMLElement
 );
-registerServiceWorker();
+unregisterServiceWorker();

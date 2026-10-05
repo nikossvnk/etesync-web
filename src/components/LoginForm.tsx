@@ -48,7 +48,7 @@ export default function LoginForm(props: PropsType) {
       errors.errorPassword = fieldRequired;
     }
 
-    if (process.env.NODE_ENV !== "development") {
+    if (!import.meta.env.DEV) {
       if (showAdvanced && !server.startsWith("https://")) {
         errors.errorServer = "Server URI must start with https://";
       }

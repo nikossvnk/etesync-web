@@ -28,8 +28,11 @@ export const resetKey = createAction(
 export const logout = createAction(
   "LOGOUT",
   async (etebase: Etebase.Account) => {
+    // Logging out clears the keys of the account, but the pages that are still shown keep using it until
+    // they're gone, so a copy of it is logged out.
+    const copy = await Etebase.Account.restore(await etebase.save());
     // We don't wait on purpose, because we would like to logout and clear local data anyway
-    etebase.logout();
+    copy.logout();
   }
 );
 

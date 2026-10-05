@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: © 2017 EteSync Authors
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import * as React from "react";
 
 import { Link, useHistory } from "react-router-dom";
 
@@ -27,7 +26,7 @@ interface PropsType {
 export default function CollectionList(props: PropsType) {
   const history = useHistory();
 
-  const collectionMap = {
+  const collectionMap: { [key: string]: React.ReactNode[] } = {
     "etebase.vcard": [],
     "etebase.vevent": [],
     "etebase.vtodo": [],

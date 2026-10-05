@@ -94,7 +94,7 @@ function getSortFunction(sortOrder: string) {
 
 const useStyles = makeStyles((theme) => ({
   topBar: {
-    backgroundColor: theme.palette.primary[500],
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 
@@ -139,7 +139,6 @@ export default function TaskList(props: PropsType) {
         const result = new Fuse(props.entries, {
           shouldSort: true,
           threshold: 0.6,
-          maxPatternLength: 32,
           minMatchCharLength: 2,
           keys: [
             "title",

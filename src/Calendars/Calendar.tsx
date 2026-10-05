@@ -26,7 +26,7 @@ function eventPropGetter(event: EventType) {
   };
 }
 
-function agendaHeaderFormat(date: {start: Date, end: Date}, _culture: string, localizer: any) {
+function agendaHeaderFormat(date: { start: Date, end: Date }, _culture: string, localizer: any) {
   const format = "ll";
   return localizer.format(date.start, format) + " - " + localizer.format(date.end, format);
 }
@@ -108,7 +108,7 @@ class Calendar extends React.PureComponent<PropsType> {
     this.setState({ view });
   }
 
-  private slotClicked(slotInfo: {start: Date, end: Date}) {
+  private slotClicked(slotInfo: { start: Date, end: Date }) {
     if (this.props.onSlotClick) {
       this.props.onSlotClick(slotInfo.start, slotInfo.end);
     }

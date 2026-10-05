@@ -5,7 +5,7 @@ import * as React from "react";
 
 import ICAL from "ical.js";
 
-import uuid from "uuid";
+import * as uuid from "uuid";
 
 import TextField from "@material-ui/core/TextField";
 

@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: © 2017 EteSync Authors
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import * as localforage from "localforage";
+import localforage from "localforage";
 import { combineReducers } from "redux";
 import { createMigrate, persistReducer, createTransform } from "redux-persist";
-import session from "redux-persist/lib/storage/session";
+import session from "redux-persist/es/storage/session";
 
 import * as Etebase from "etebase";
 
@@ -20,7 +20,7 @@ export interface StoreState {
   fetchCount: number;
   credentials: CredentialsData;
   settings: SettingsType;
-  encryptionKey: {key: string};
+  encryptionKey: { key: string };
   sync: {
     collections: SyncCollectionsData;
     general: SyncGeneralData;
@@ -82,7 +82,7 @@ const syncDeserialize = (state: any, key: string | number) => {
 const syncPersistConfig = {
   key: "sync",
   storage: localforage,
-  transforms: [createTransform(syncSerialize, syncDeserialize)],
+  transforms: [createTransform(syncSerialize, syncDeserialize)] as any,
 };
 
 const cacheSerialize = (state: any, key: string | number) => {

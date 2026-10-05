@@ -6,7 +6,7 @@ import Paper from "@material-ui/core/Paper";
 
 import "./Container.css";
 
-export default (props: {style?: React.CSSProperties, children: any}) => {
+export default (props: { style?: React.CSSProperties, children: any }) => {
   const display = props.style?.display;
   const flexDirection = props.style?.flexDirection;
 

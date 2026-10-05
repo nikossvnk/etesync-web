@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
-    "outDir": "build/dist",
     "module": "esnext",
-    "target": "es5",
+    "target": "ES2020",
     "lib": [
-      "es6",
-      "dom"
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
     ],
-    "sourceMap": true,
     "allowJs": true,
-    "jsx": "preserve",
-    "rootDir": "src",
-    "downlevelIteration": true,
+    "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -25,19 +22,17 @@
     "noUnusedParameters": false,
     "strictNullChecks": true,
     "strictBindCallApply": true,
-    "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": [
+      "vite/client"
+    ],
+    "useDefineForClassFields": false
   },
   "exclude": [
     "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts"
+    "build"
   ],
   "include": [
     "src"

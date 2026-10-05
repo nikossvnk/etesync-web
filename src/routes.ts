@@ -13,7 +13,7 @@ export class RouteResolver {
   }
 
   public getRoute(name: string, _keys?: RouteKeysType): string {
-    let dict = this.routes;
+    let dict: any = this.routes;
 
     let path: string[] = [];
     name.split(".").forEach((key) => {

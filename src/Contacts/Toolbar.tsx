@@ -1,4 +1,3 @@
-import * as React from "react";
 
 import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
@@ -8,7 +7,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 
 const transitionTimeout = 300;
 
-const transitionStyles = {
+const transitionStyles: { [key: string]: React.CSSProperties } = {
   entering: { visibility: "visible", width: "100%", overflow: "hidden" },
   entered: { visibility: "visible", width: "100%" },
   exiting: { visibility: "visible", width: "0%", overflow: "hidden" },

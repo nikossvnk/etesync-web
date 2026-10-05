@@ -74,7 +74,7 @@ export default function SignupPage() {
         }
       }
 
-      if (process.env.NODE_ENV !== "development") {
+      if (!import.meta.env.DEV) {
         if (showAdvanced && !server.startsWith("https://")) {
           errors.server = "Server URI must start with https://";
         }

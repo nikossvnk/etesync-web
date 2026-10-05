@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: © 2017 EteSync Authors
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import * as React from "react";
 import { Route, Switch, Redirect, RouteProps } from "react-router";
 import { useCredentials } from "./credentials";
 import LoadingIndicator from "./widgets/LoadingIndicator";

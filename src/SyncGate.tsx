@@ -6,7 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { Route, Switch, Redirect, useHistory } from "react-router";
 
 import moment from "moment";
-import "moment/locale/en-gb";
+// From the ES module build of moment, which is the one that the app gets (the locale in moment/locale/
+// would be added to the CommonJS build instead)
+import "moment/dist/locale/en-gb";
 
 import { routeResolver } from "./App";
 

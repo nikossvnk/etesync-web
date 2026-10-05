@@ -10,7 +10,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import Dropzone from "react-dropzone";
+import Dropzone, { Accept, FileRejection } from "react-dropzone";
 
 import LoadingIndicator from "../widgets/LoadingIndicator";
 
@@ -39,7 +39,7 @@ export default function ImportDialog(props: PropsType) {
   const [loading, setLoading] = React.useState(false);
   const [itemsProcessed, setItemsProccessed] = React.useState<number>();
 
-  function onFileDropCommon(itemsCreator: (fileText: string) => PimType[], acceptedFiles: File[], rejectedFiles: File[]) {
+  function onFileDropCommon(itemsCreator: (fileText: string) => PimType[], acceptedFiles: File[], rejectedFiles: FileRejection[]) {
     // XXX: implement handling of rejectedFiles
     const reader = new FileReader();
 
@@ -103,7 +103,7 @@ export default function ImportDialog(props: PropsType) {
     }
   }
 
-  function onFileDropContact(acceptedFiles: File[], rejectedFiles: File[]) {
+  function onFileDropContact(acceptedFiles: File[], rejectedFiles: FileRejection[]) {
     const itemsCreator = (fileText: string) => {
       const mainComp = ICAL.parse(fileText);
       return mainComp.map((comp) => {
@@ -118,7 +118,7 @@ export default function ImportDialog(props: PropsType) {
     onFileDropCommon(itemsCreator, acceptedFiles, rejectedFiles);
   }
 
-  function onFileDropEvent(acceptedFiles: File[], rejectedFiles: File[]) {
+  function onFileDropEvent(acceptedFiles: File[], rejectedFiles: FileRejection[]) {
     const itemsCreator = (fileText: string) => {
       const calendarComp = new ICAL.Component(ICAL.parse(fileText));
       return calendarComp.getAllSubcomponents("vevent").map((comp) => {
@@ -133,7 +133,7 @@ export default function ImportDialog(props: PropsType) {
     onFileDropCommon(itemsCreator, acceptedFiles, rejectedFiles);
   }
 
-  function onFileDropTask(acceptedFiles: File[], rejectedFiles: File[]) {
+  function onFileDropTask(acceptedFiles: File[], rejectedFiles: FileRejection[]) {
     const itemsCreator = (fileText: string) => {
       const calendarComp = new ICAL.Component(ICAL.parse(fileText));
       return calendarComp.getAllSubcomponents("vtodo").map((comp) => {
@@ -159,17 +159,17 @@ export default function ImportDialog(props: PropsType) {
   }
 
   const { collectionType } = props.collection;
-  let acceptTypes;
+  let acceptTypes: Accept | undefined;
   let dropFunction;
 
   if (collectionType === "etebase.vcard") {
-    acceptTypes = ["text/vcard", "text/directory", "text/x-vcard", ".vcf"];
+    acceptTypes = { "text/vcard": [".vcf"], "text/directory": [".vcf"], "text/x-vcard": [".vcf"] };
     dropFunction = onFileDropContact;
   } else if (collectionType === "etebase.vevent") {
-    acceptTypes = ["text/calendar", ".ics", ".ical"];
+    acceptTypes = { "text/calendar": [".ics", ".ical"] };
     dropFunction = onFileDropEvent;
   } else if (collectionType === "etebase.vtodo") {
-    acceptTypes = ["text/calendar", ".ics", ".ical"];
+    acceptTypes = { "text/calendar": [".ics", ".ical"] };
     dropFunction = onFileDropTask;
   }
 

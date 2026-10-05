@@ -126,7 +126,7 @@ export default function CollectionEdit(props: PropsType) {
     },
   };
 
-  const colTypes = {
+  const colTypes: { [key: string]: string } = {
     "etebase.vcard": "Address Book",
     "etebase.vevent": "Calendar",
     "etebase.vtodo": "Task List",
@@ -223,7 +223,7 @@ export default function CollectionEdit(props: PropsType) {
         title="Delete Confirmation"
         labelOk="Delete"
         open={showDeleteDialog}
-        onOk={() => onDelete(props.collection?.collection!)}
+        onOk={() => onDelete(props.collection!.collection)}
         onCancel={() => setShowDeleteDialog(false)}
       >
         Are you sure you would like to delete this collection?

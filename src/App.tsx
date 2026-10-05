@@ -219,7 +219,7 @@ export default function App() {
     },
   });
 
-  const styles: {[key: string]: React.CSSProperties} = {
+  const styles: { [key: string]: React.CSSProperties } = {
     main: {
       backgroundColor: muiTheme.palette.background.default,
       color: muiTheme.palette.text.primary,
@@ -231,7 +231,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={muiTheme}>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <div style={styles.main} className={darkMode ? "theme-dark" : "theme-light"}>
           <AppBarWitHistory
             toggleDrawerIcon={<IconButton onClick={toggleDrawer}><NavigationMenu /></IconButton>}

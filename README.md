@@ -38,18 +38,35 @@ serving it from a server, please use a proper web server such as nginx.
 
 ## Building it yourself
 
-Before you can build the web app from source, you need to make sure you have `yarn` install.
+Before you can build the web app from source, you need [Node.js](https://nodejs.org/) 20.19 or newer
+(which comes with `npm`).
 
-Then clone this repository `yarn`, run `yarn` and wait until all of the deps are installed.
+Then clone this repository, run `npm ci` and wait until all of the deps are installed.
 
-Then it's recommended you run `yarn build` to build a production ready client you should serve
+Then it's recommended you run `npm run build` to build a production ready client you should serve
 (even if run locally!) and then just serve the `build` directory from a web server.
+For development, `npm start` runs the app on http://localhost:3000 and reloads it on changes.
 
 The URL of the EteSync API the web app connects to defaults to `api.etebase.com`, but can be changed on
 the login page. You can change this default by setting the environment variable `REACT_APP_DEFAULT_API_PATH`
 during the build. This can be useful for self-hosting. You can set the default URL to the address
-of your self-hosted EteSync server so you don't have to change the address for every login.
+of your self-hosted EteSync server so you don't have to change the address for every login, e.g.:
+
+```
+REACT_APP_DEFAULT_API_PATH=https://etebase.example.com/ npm run build
+```
 
 ### Serving from a subdirectory
 
-In order to run your own version and serve it from a subdirectory rather than the top level of the domain, add `"homepage": "/subdir-name"` to the `package.json` file.
+In order to run your own version and serve it from a subdirectory rather than the top level of the domain,
+set the environment variable `PUBLIC_URL` during the build, e.g. `PUBLIC_URL=/subdir-name/ npm run build`.
+
+### Running it locally as a desktop app
+
+[local-web/](local-web/) has a script that builds the app and serves it on http://localhost:8091 for your
+user only, with a menu entry that opens it in its own window. See [local-web/README.md](local-web/README.md).
+
+## Checks
+
+- `npm run lint` and `npx tsc` check the code, `npm test` runs the unit tests.
+- [e2e/](e2e/) has browser tests of the whole app against an Etebase test server, see [e2e/README.md](e2e/README.md).

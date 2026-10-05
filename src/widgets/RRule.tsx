@@ -116,10 +116,10 @@ interface PropsType {
 export default function RRule(props: PropsType) {
   const options = props.rrule;
   function updateRule(newOptions: Partial<RRuleOptions>, reset = false): void {
-    const updatedOptions: RRuleOptions = { ...options, ...newOptions };
+    const updatedOptions: { [key: string]: any } = { ...options, ...newOptions };
 
     if (reset) {
-      props.onChange(updatedOptions);
+      props.onChange(updatedOptions as RRuleOptions);
       return;
     }
 
@@ -130,7 +130,7 @@ export default function RRule(props: PropsType) {
         continue;
       }
     }
-    props.onChange(updatedOptions);
+    props.onChange(updatedOptions as RRuleOptions);
   }
   function getEnds(): Ends {
     if (options.until && !options.count) {
@@ -206,7 +206,7 @@ export default function RRule(props: PropsType) {
             </Select>
           }
           {options.bysetpos &&
-            <Select value={options.bysetpos[0]}
+            <Select value={(options.bysetpos as number[])[0]}
               onChange={(event: React.FormEvent<{ value: unknown }>) => {
                 updateRule({ bysetpos: [Number((event.target as HTMLInputElement).value)] });
               }}>
@@ -224,7 +224,7 @@ export default function RRule(props: PropsType) {
         {options.freq === "MONTHLY" &&
           <TextField
             type="number"
-            value={options.bymonthday ? options.bymonthday[0] : undefined}
+            value={options.bymonthday ? (options.bymonthday as number[])[0] : undefined}
             label="Month day"
             style={styles.width}
             inputProps={{ min: 1, step: 1, max: 31 }}

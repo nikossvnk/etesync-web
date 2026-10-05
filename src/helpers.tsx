@@ -29,7 +29,7 @@ export function handleInputChange(self: React.Component, part?: string) {
     } else {
       self.setState({
         [part]: {
-          ...self.state[part],
+          ...(self.state as any)[part],
           ...newState,
         },
       });
@@ -43,7 +43,7 @@ export function insertSorted<T>(array: T[] = [], newItem: T, key: string) {
   }
 
   for (let i = 0, len = array.length; i < len; i++) {
-    if (newItem[key] < array[i][key]) {
+    if ((newItem as any)[key] < (array[i] as any)[key]) {
       array.splice(i, 0, newItem);
       return array;
     }

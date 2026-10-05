@@ -23,7 +23,10 @@ class DateTimePicker extends React.PureComponent<PropsType> {
 
   public render() {
     const Picker = (this.props.dateOnly) ? KeyboardDatePicker : KeyboardDateTimePicker;
-    const dateFormat = (this.props.dateOnly) ? "L" : "L LT";
+    // The input mask is made from the format by replacing each letter with a digit placeholder, so the
+    // format has to have exactly one letter per digit: "L" would only allow for typing a single digit.
+    const dayFormat = moment.localeData().longDateFormat("L");
+    const dateFormat = (this.props.dateOnly) ? dayFormat : `${dayFormat} HH:mm`;
     return (
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Picker

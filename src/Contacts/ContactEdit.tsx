@@ -147,9 +147,9 @@ class ContactEdit extends React.PureComponent<PropsType> {
 
     collectionUid: string;
     showDeleteDialog: boolean;
-    collectionGroups: {};
+    collectionGroups: { [key: string]: ContactType };
     newGroups: string[];
-    originalGroups: {};
+    originalGroups: { [key: string]: undefined };
   };
 
   constructor(props: PropsType) {
@@ -174,7 +174,7 @@ class ContactEdit extends React.PureComponent<PropsType> {
       showDeleteDialog: false,
       collectionGroups: {},
       newGroups: [],
-      originalGroups: [],
+      originalGroups: {},
     };
 
     if (this.props.item !== undefined) {
@@ -219,7 +219,10 @@ class ContactEdit extends React.PureComponent<PropsType> {
       this.state.phone = propToValueType(contact.comp, "tel");
       this.state.email = propToValueType(contact.comp, "email");
       this.state.address = propToValueType(contact.comp, "adr");
-      this.state.impp = propToValueType(contact.comp, "impp");
+      // The type is saved in front of the address (e.g. "jabber:me@example.com"), and added back when saving
+      this.state.impp = propToValueType(contact.comp, "impp").map((x) => (
+        new ValueType(x.type, x.value.startsWith(`${x.type}:`) ? x.value.slice(x.type.length + 1) : x.value)
+      ));
 
       const propToStringType = (comp: ICAL.Component, propName: string) => {
         const val = comp.getFirstPropertyValue(propName);
@@ -264,7 +267,7 @@ class ContactEdit extends React.PureComponent<PropsType> {
   public addValueType(name: string, _type?: string) {
     const type = _type ? _type : "home";
     this.setState((prevState) => {
-      const newArray = prevState[name].slice(0);
+      const newArray = (prevState as any)[name].slice(0);
       newArray.push(new ValueType(type));
       return {
         ...prevState,
@@ -275,7 +278,7 @@ class ContactEdit extends React.PureComponent<PropsType> {
 
   public removeValueType(name: string, idx: number) {
     this.setState((prevState) => {
-      const newArray = prevState[name].slice(0);
+      const newArray = (prevState as any)[name].slice(0);
       newArray.splice(idx, 1);
       return {
         ...prevState,
@@ -286,7 +289,7 @@ class ContactEdit extends React.PureComponent<PropsType> {
 
   public handleValueTypeChange(name: string, idx: number, value: ValueType) {
     this.setState((prevState) => {
-      const newArray = prevState[name].slice(0);
+      const newArray = (prevState as any)[name].slice(0);
       newArray[idx] = value;
       return {
         ...prevState,
@@ -302,7 +305,7 @@ class ContactEdit extends React.PureComponent<PropsType> {
   }
 
   public getCollectionGroups(collectionUid: string) {
-    const groups = {};
+    const groups: { [key: string]: ContactType } = {};
     this.props.allGroups.forEach((group) => {
       if (collectionUid === group.collectionUid) {
         groups[group.fn] = group;
@@ -354,6 +357,10 @@ class ContactEdit extends React.PureComponent<PropsType> {
     const comp = contact.comp;
     this.addMetadata(contact, this.state.uid, false);
 
+    // The groups are saved one after the other, and before the contact, as the server can fail to
+    // take several changes at the same time
+    const groupSaves: (() => Promise<void>)[] = [];
+
     // Add new groups
     this.state.newGroups.forEach((group) => {
       if (!this.state.collectionGroups[group]) {
@@ -361,12 +368,12 @@ class ContactEdit extends React.PureComponent<PropsType> {
         this.addMetadata(newGroup, uuid.v4(), true);
         newGroup.comp.updatePropertyWithValue("fn", group.trim());
         newGroup.comp.updatePropertyWithValue("member", `urn:uuid:${this.state.uid}`);
-        this.props.onSave(newGroup, this.state.collectionUid, undefined);
+        groupSaves.push(() => this.props.onSave(newGroup, this.state.collectionUid, undefined));
       } else if (!(group in this.state.originalGroups)) {
         const oldGroup = this.state.collectionGroups[group];
         const updatedGroup = oldGroup.clone();
         updatedGroup.comp.addPropertyWithValue("member", `urn:uuid:${this.state.uid}`);
-        this.props.onSave(updatedGroup, this.state.collectionUid, oldGroup);
+        groupSaves.push(() => this.props.onSave(updatedGroup, this.state.collectionUid, oldGroup));
       }
     });
 
@@ -377,7 +384,7 @@ class ContactEdit extends React.PureComponent<PropsType> {
       const members = updatedGroup.members.filter((uid: string) => uid !== this.state.uid);
       updatedGroup.comp.removeAllProperties("member");
       members.forEach((m: string) => updatedGroup.comp.addPropertyWithValue("member", `urn:uuid:${m}`));
-      this.props.onSave(updatedGroup, this.state.collectionUid, deletedGroup);
+      groupSaves.push(() => this.props.onSave(updatedGroup, this.state.collectionUid, deletedGroup));
     });
 
     const lastName = this.state.lastName.trim();
@@ -386,7 +393,7 @@ class ContactEdit extends React.PureComponent<PropsType> {
     const namePrefix = this.state.namePrefix.trim();
     const nameSuffix = this.state.nameSuffix.trim();
     
-    let fn = `${namePrefix} ${firstName} ${middleName} ${lastName}`.trim();
+    let fn = [namePrefix, firstName, middleName, lastName].filter((x) => x !== "").join(" ");
 
     if (fn === "") { 
       fn = nameSuffix;
@@ -423,7 +430,7 @@ class ContactEdit extends React.PureComponent<PropsType> {
     setProperties("email", this.state.email);
     setProperties("adr", this.state.address);
     setProperties("impp", this.state.impp.map((x) => (
-      { type: x.type, value: x.type + ":" + x.value }
+      { type: x.type, value: (x.value === "") ? "" : x.type + ":" + x.value }
     )));
 
     function setProperty(name: string, value: string) {
@@ -437,10 +444,13 @@ class ContactEdit extends React.PureComponent<PropsType> {
     setProperty("title", this.state.title);
     setProperty("note", this.state.note);
 
-    this.props.onSave(contact, this.state.collectionUid, this.props.item)
-      .then(() => {
-        this.props.history.goBack();
-      });
+    (async () => {
+      for (const save of groupSaves) {
+        await save();
+      }
+      await this.props.onSave(contact, this.state.collectionUid, this.props.item);
+      this.props.history.goBack();
+    })();
   }
 
   public onDeleteRequest() {

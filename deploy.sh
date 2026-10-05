@@ -7,11 +7,9 @@ SSH_TARGET_DIR=sites/pim.etesync.com
 
 OUTPUTDIR=./build
 
-export INLINE_RUNTIME_CHUNK=false
+npm run build
 
-yarn build
-
-sed -i "s#\(<script type=\"text/javascript\"\)#\1 integrity=\"sha384-$(shasum -b -a 384 build/static/js/main.*.js | xxd -r -p | base64 -w0)\" crossorigin=\"anonymous\"#" build/index.html
+sed -i "s#\(<script type=\"module\"\)#\1 integrity=\"sha384-$(shasum -b -a 384 build/assets/index-*.js | xxd -r -p | base64 -w0)\"#" build/index.html
 ./page-signer.js build/index.html build/index.html
 # Create a source tarball
 bsdtar -czf build/etesync-web.tgz --exclude build/etesync-web.tgz -s /build/etesync-web/ build/*

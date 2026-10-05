@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: © 2020 EteSync Authors
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import * as React from "react";
 import { Tabs, Tab, useTheme } from "@material-ui/core";
 import { useHistory } from "react-router";
 import { routeResolver } from "../App";

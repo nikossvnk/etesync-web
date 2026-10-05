@@ -24,7 +24,11 @@ import Alert from "@material-ui/lab/Alert";
 import { PASSWORD_MIN_LENGTH, startTask, enforcePasswordRules } from "../helpers";
 
 function SecurityFingerprint() {
-  const etebase = useCredentials()!;
+  const etebase = useCredentials();
+  if (!etebase) {
+    // Just logged out, the login page comes next
+    return null;
+  }
   const inviteMgr = etebase.getInvitationManager();
   const publicKey = inviteMgr.pubkey;
 

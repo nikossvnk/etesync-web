@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: © 2020 EteSync Authors
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import * as React from "react";
 import { Fab } from "@material-ui/core";
 import ContentAdd from "@material-ui/icons/Add";
 
@@ -96,7 +95,7 @@ export async function itemSave(etebase: Etebase.Account, collection: Etebase.Col
   let eteItem;
   if (itemUid) {
     // Existing item
-    eteItem = items!.get(collectionUid)?.get(itemUid)!;
+    eteItem = items!.get(collectionUid)!.get(itemUid)!;
     await eteItem.setContent(content);
     const meta = eteItem.getMeta();
     meta.mtime = mtime;
@@ -118,7 +117,7 @@ export async function itemDelete(etebase: Etebase.Account, collection: Etebase.C
   const colMgr = getCollectionManager(etebase);
   const itemMgr = colMgr.getItemManager(collection);
 
-  const eteItem = items!.get(collectionUid)?.get(itemUid)!;
+  const eteItem = items!.get(collectionUid)!.get(itemUid)!;
   const mtime = (new Date()).getTime();
   const meta = eteItem.getMeta();
   meta.mtime = mtime;

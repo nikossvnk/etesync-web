@@ -22,9 +22,11 @@ export function timezoneLoadFromName(timezone: string | null) {
     return null;
   }
 
-  let zone = zones.zones[timezone];
-  if (!zone && zones.aliases[timezone]) {
-    zone = zones.zones[zones.aliases[timezone]];
+  const allZones: { [key: string]: { ics: string[] } } = zones.zones;
+  const aliases: { [key: string]: { aliasTo: string } } = zones.aliases;
+  let zone = allZones[timezone];
+  if (!zone && aliases[timezone]) {
+    zone = allZones[aliases[timezone].aliasTo];
   }
 
   if (!zone) {
@@ -59,6 +61,17 @@ export function parseString(content: string) {
 export class EventType extends ICAL.Event implements PimType {
   public collectionUid?: string;
   public itemUid?: string;
+  // The color of the collection the event is in, which it's shown with. It's not a part of the event
+  // itself, so this replaces the accessor of ical.js, which sets the COLOR property of the event.
+  private _color?: string;
+
+  get color(): string | undefined {
+    return this._color;
+  }
+
+  set color(value: string | undefined) {
+    this._color = value;
+  }
 
   public static isEvent(comp: ICAL.Component) {
     return !!comp.getFirstSubcomponent("vevent");
@@ -74,8 +87,6 @@ export class EventType extends ICAL.Event implements PimType {
   public static parse(content: string) {
     return EventType.fromVCalendar(parseString(content));
   }
-
-  public color: string;
 
   get timezone() {
     if (this.startDate) {
@@ -157,7 +168,7 @@ export enum TaskPriorityType {
   Undefined = 0,
   High = 1,
   Medium = 5,
-  Low = 9
+  Low = 9,
 }
 
 export let TaskTags = ["Work", "Home"];
@@ -180,8 +191,6 @@ export class TaskType extends EventType {
   public static parse(content: string) {
     return TaskType.fromVCalendar(parseString(content));
   }
-
-  public color: string;
 
   constructor(comp?: ICAL.Component | null) {
     super(comp ? comp : new ICAL.Component("vtodo"));
