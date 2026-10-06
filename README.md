@@ -3,6 +3,13 @@
   <h1 align="center">EteSync - Encrypt Everything</h1>
 </p>
 
+> [!NOTE]
+> **This is an independent fork** of the [EteSync Web App](https://github.com/etesync/etesync-web), the original
+> project of the EteSync authors. This fork is not affiliated with, endorsed by or supported by EteSync or
+> [etesync.com](https://www.etesync.com) in any way. The history of the original project is kept as it is,
+> with its authors, and the changes of this fork follow it. The hosted instance and the links to etesync.com
+> below are of the original project. Like the original, it's licensed under the AGPL-3.0.
+
 The EteSync Web App - Use EteSync from the browser!
 
 
