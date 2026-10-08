@@ -40,6 +40,7 @@ Options (environment variables):
 | `SERVER` | the one of the last install, otherwise EteSync's | The server the login page uses, unless another one is entered under "Advanced settings". It's kept for later updates |
 | `PORT` | `8091` | The port on localhost |
 | `BROWSER` | the first one found of Chromium, Chrome, Brave, Edge, Firefox | The browser the shortcut opens. Chromium-based browsers open it in an app window, Firefox in a new window |
+| `LOW_MEMORY` | `1` | Chromium-based browsers get flags that make them use a bit less memory (no spare page process, at most two, no background downloads, updates or sync); `0` leaves them out |
 
 Then open "EteSync" from the applications menu or the desktop and log in. Without `SERVER`, enter
 your server's URL under "Advanced settings". With an account that has no calendar, address book and

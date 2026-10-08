@@ -8,6 +8,7 @@
 #   SERVER=https://etebase.example.com ./install.sh   # the server the login page uses by default
 #   PORT=8092 ./install.sh                         # another port (default 8091)
 #   BROWSER=chromium ./install.sh                  # the browser the shortcut opens (default: found automatically)
+#   LOW_MEMORY=0 ./install.sh                      # without the flags that make Chromium-based browsers use less memory
 #
 # What it does:
 #   1. Builds the app from this repository into ~/.local/share/etesync-web/site
@@ -136,8 +137,16 @@ if [ -z "$browser" ]; then
         fi
     done
 fi
+# Chromium-based browsers run the window in a browser of its own, so these leave out what it doesn't
+# need: a spare page process kept ready, more than the window's two (the app and the window's frame),
+# and background downloads, updates, sync, translation, casting and the back/forward cache. They keep
+# the profile, so the app's data stays.
+low_memory_flags=""
+if [ "${LOW_MEMORY:-1}" != "0" ]; then
+    low_memory_flags=" --renderer-process-limit=2 --disable-background-networking --disable-component-update --disable-sync --disable-default-apps --disable-features=SpareRendererForSitePerProcess,Translate,OptimizationHints,MediaRouter,BackForwardCache"
+fi
 case "$(basename "${browser:-xdg-open}")" in
-    chromium*|google-chrome*|brave*|microsoft-edge*) exec_line="$browser --app=$URL" ;;
+    chromium*|google-chrome*|brave*|microsoft-edge*) exec_line="$browser$low_memory_flags --app=$URL" ;;
     firefox*) exec_line="$browser --new-window $URL" ;;
     *) exec_line="xdg-open $URL" ;;
 esac
