@@ -11,11 +11,12 @@ point them at a real server or account.
 
 ## Running them
 
-1. An Etebase test server that allows signing up, e.g. the `test-server` image of the Etebase server
+1. An Etebase test server that allows signing up, e.g. the `test-server` image of our Etebase server
    (`docker/test-server` in its repository), on `http://127.0.0.1:3735`:
 
    ```
-   docker run -d --name etebase-test -p 127.0.0.1:3735:3735 etesync/test-server
+   docker build -t etebase-test-server -f docker/test-server/Dockerfile https://github.com/nikossvnk/etesync-server.git
+   docker run -d --name etebase-test -p 127.0.0.1:3735:3735 etebase-test-server
    ```
 
 2. The dependencies of the app (`npm ci` in the root of the repository) and of the tests:
